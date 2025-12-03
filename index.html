@@ -24,129 +24,81 @@
 <body>
     <iframe src="https://macvg2025.github.io/macvg"></iframe>
     <script>
-// Create overlay
-const overlay = document.createElement("div");
-overlay.style.position = "fixed";
-overlay.style.top = 0;
-overlay.style.left = 0;
-overlay.style.width = "100vw";
-overlay.style.height = "100vh";
-overlay.style.background = "linear-gradient(135deg, #000428, #004e92)";
-overlay.style.zIndex = "999999999999";
-overlay.style.display = "flex";
-overlay.style.flexDirection = "column";
-overlay.style.alignItems = "center";
-overlay.style.justifyContent = "center";
-overlay.style.opacity = "0";
-overlay.style.transition = "opacity 0.6s ease-out";
-document.body.appendChild(overlay);
+// create overlay
+const ov = document.createElement("div");
+ov.id = "niamUpdateOverlay";
+ov.innerHTML = `
+  <div class="overlay-box">
+    <h1>New Update! (Again...)</h1>
+    <div class="btns">
+      <a href="https://niamco.github.io/macvg" class="ov-btn">Go to Update</a>
+      <a href="https://niamco.github.io/niamverse" class="ov-btn">Go to Last Update</a>
+    </div>
+  </div>
+`;
+document.body.appendChild(ov);
 
-setTimeout(() => overlay.style.opacity = "1", 20);
-
-// Wave text container
-const title = document.createElement("div");
-title.style.display = "flex";
-title.style.gap = "6px";
-title.style.marginBottom = "30px";
-overlay.appendChild(title);
-
-const text = "THE NEW SITE IS HERE!!!";
-[...text].forEach((ch, i) => {
-    const span = document.createElement("span");
-    span.innerText = ch;
-    span.style.color = "white";
-    span.style.fontSize = "4rem";
-    span.style.fontWeight = "900";
-    span.style.fontFamily = "Arial, sans-serif";
-    span.style.animation = `wave 1.2s ${i * 0.08}s infinite ease-in-out`;
-    title.appendChild(span);
-});
-
-// Buttons container
-const btnWrap = document.createElement("div");
-btnWrap.style.display = "flex";
-btnWrap.style.gap = "20px";
-overlay.appendChild(btnWrap);
-
-// Enter button
-const enter = document.createElement("div");
-enter.innerText = "Enter";
-enter.style.padding = "15px 40px";
-enter.style.fontSize = "1.8rem";
-enter.style.fontWeight = "700";
-enter.style.color = "#000";
-enter.style.background = "white";
-enter.style.borderRadius = "12px";
-enter.style.cursor = "pointer";
-enter.style.transition = "transform 0.2s";
-enter.onclick = () => window.location.href = "https://niamco.github.io/niamverse";
-enter.onmouseenter = () => enter.style.transform = "scale(1.12)";
-enter.onmouseleave = () => enter.style.transform = "scale(1)";
-btnWrap.appendChild(enter);
-
-// Stay button
-const stay = document.createElement("div");
-stay.innerText = "Stay on this site";
-stay.style.padding = "15px 40px";
-stay.style.fontSize = "1.8rem";
-stay.style.fontWeight = "700";
-stay.style.color = "white";
-stay.style.background = "rgba(255,255,255,0.2)";
-stay.style.border = "2px solid white";
-stay.style.borderRadius = "12px";
-stay.style.cursor = "pointer";
-stay.style.transition = "transform 0.2s, background 0.2s";
-stay.onmouseenter = () => {
-    stay.style.transform = "scale(1.12)";
-    stay.style.background = "rgba(255,255,255,0.35)";
-};
-stay.onmouseleave = () => {
-    stay.style.transform = "scale(1)";
-    stay.style.background = "rgba(255,255,255,0.2)";
-};
-stay.onclick = () => {
-    overlay.style.opacity = "0";
-    setTimeout(() => overlay.remove(), 500);
-};
-btnWrap.appendChild(stay);
-
-// Add CSS for wave + confetti
+// inject sexy CSS without polluting your crusty stylesheet
 const style = document.createElement("style");
-style.innerHTML = `
-@keyframes wave {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-}
-.confetti {
+style.textContent = `
+  #niamUpdateOverlay {
     position: fixed;
-    width: 10px;
-    height: 10px;
-    top: -20px;
-    border-radius: 2px;
-    opacity: 0.9;
-    z-index: 999999999999999;
-    animation: drop var(--t) linear forwards;
-}
-@keyframes drop {
-    to {
-        transform: translateY(110vh) rotate(720deg);
-        opacity: 0;
-    }
-}
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    font-family: Arial, sans-serif;
+  }
+
+  #niamUpdateOverlay .overlay-box {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 30px rgba(255,255,255,0.15);
+    animation: pop 0.4s ease-out;
+  }
+
+  #niamUpdateOverlay h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+    color: #111;
+  }
+
+  #niamUpdateOverlay .btns {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #niamUpdateOverlay .ov-btn {
+    display: block;
+    padding: 14px;
+    background: #007bff;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: 0.2s;
+  }
+
+  #niamUpdateOverlay .ov-btn:hover {
+    transform: scale(1.05);
+    background: #005fcc;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 `;
 document.head.appendChild(style);
 
-// Confetti generator
-for (let i = 0; i < 200; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
-    c.style.setProperty("--t", (0.7 + Math.random() * 1.4) + "s");
-    document.body.appendChild(c);
-
-    setTimeout(() => c.remove(), 2000);
-}
 
     </script>
 </body>
